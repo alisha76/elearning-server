@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import { connectDb } from "./database/db.js";
 import Razorpay from "razorpay";
 import cors from "cors";
-
+import contactRoutes from "../server/routes/contact.js"
 dotenv.config();
 
 export const instance = new Razorpay({
@@ -16,6 +16,9 @@ const app = express();
 // using middlewares
 app.use(express.json());
 app.use(cors());
+app.use("/api/form",contactRoutes)
+
+
 
 const port = process.env.PORT;
 
