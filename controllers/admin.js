@@ -141,3 +141,35 @@ export const updateRole = TryCatch(async (req, res) => {
     });
   }
 });
+
+export const deleteUser  = TryCatch(async (req, res) => {
+  // Check if the user making the request is a superadmin
+  if (req.user.mainrole !== "superadmin") {
+    return res.status(403).json({
+      message: "This endpoint is assigned to superadmin",
+    });
+  }
+
+  // Find the user by ID
+  const user = await User.findById(req.params.id);
+
+  // Check if the user exists
+  if (!user) {
+    return res.status(404).json({
+      message: "User  not found",
+    });
+  }
+
+  // Delete the user
+  await user.deleteOne();
+
+  // Optionally, update courses created by the user
+  await Courses.updateMany(
+    { createdBy: user._id },
+    { $set: { createdBy: null } } // Set the createdBy field to null or handle it as per your logic
+  );
+
+  res.json({
+    message: "User  deleted successfully",
+  });
+});
