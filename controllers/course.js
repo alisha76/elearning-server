@@ -155,6 +155,8 @@ export const addProgress = TryCatch(async (req, res) => {
   });
 });
 
+
+
 export const getYourProgress = TryCatch(async (req, res) => {
   const progress = await Progress.find({
     user: req.user._id,

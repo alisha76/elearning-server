@@ -173,3 +173,70 @@ export const deleteUser  = TryCatch(async (req, res) => {
     message: "User  deleted successfully",
   });
 });
+
+
+// export const editCourse = TryCatch(async (req, res) => {
+//   const { title, description, category, duration, price } = req.body;
+
+//   console.log('params', req.params)
+//   const course = await Courses.findById(req.params.id);
+//   if (!course) {
+//     return res.status(404).json({
+//       message: "Course not found",
+//     });
+//   }
+
+//   // Update course details
+//   course.title = title || course.title;
+//   course.description = description || course.description;
+//   course.category = category || course.category;
+//   course.duration = duration || course.duration;
+//   course.price = price || course.price;
+
+//   // If a new image is uploaded, handle it
+//   if (req.file) {
+//     // Remove the old image
+//     await unlinkAsync(course.image);
+//     course.image = req.file.path; // Update to new image path
+//   }
+
+//   await course.save();
+
+//   res.status(200).json({
+//     message: "Course updated successfully",
+//     course,
+//   });
+// });
+
+export const editCourse = TryCatch(async (req, res) => {
+  const { title, description, category, createdBy, duration, price } = req.body;
+
+  console.log('req body', req.body);
+
+  const course = await Courses.findById(req.params.id);
+  if (!course) {
+    return res.status(404).json({
+      message: "Course not found",
+    });
+  }
+
+  course.title = title || course.title;
+  course.description = description || course.description;
+  course.category = category || course.category;
+  course.duration = duration || course.duration;
+  course.price = price || course.price;
+
+  if (req.file) {
+    
+    await unlinkAsync(course.image);
+    course.image = req.file.path; 
+  }
+
+  
+  await course.save();
+
+  res.status(200).json({
+    message: "Course updated successfully",
+    course,
+  });
+});
